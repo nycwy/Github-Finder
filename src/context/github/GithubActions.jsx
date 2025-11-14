@@ -18,3 +18,38 @@ const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
         return items
     }
 
+
+    //Get Single User
+    export const getUser = async (login) => {
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            }
+        });
+
+        if (response.status === 404) {
+            window.location = './notFound'
+        } else {
+            const data = await response.json();
+            return data;
+        }
+    }
+
+    //Get User Repos
+    export const getUserRepos = async (login) => {
+
+        const params = new URLSearchParams({
+            sort: 'created',
+            per_page: 10
+        })
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}/repos?${params}`, {
+            headers: {
+                Authorization: `token ${GITHUB_TOKEN}`
+            }
+        });
+        const data = await response.json();
+        return data;
+    }
+
